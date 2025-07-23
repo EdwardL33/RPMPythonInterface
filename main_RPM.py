@@ -11,7 +11,7 @@ import serial.tools.list_ports
 import serial, time
 
 root = tkinter.Tk()
-root.wm_title("Centrifuge Interface")
+root.wm_title("RPM Interface")
 
 i = tkinter.PhotoImage(width=1, height=1)
 
@@ -47,7 +47,7 @@ def on_stop_press():
     ser.baudrate = 115200
     ser.port = 'COM5'
     ser.open()
-    INPUT = "q"
+    INPUT = "r"
     for i in INPUT:
         ser.write(i.encode('utf-8',errors="ignore"))
         time.sleep(0.01)
@@ -63,7 +63,7 @@ def on_start_press():
     ser.port = 'COM5'
     ser.open()
     INPUT = profile_text.get("1.0", "end")
-    INPUT = 'u' + INPUT + 'uo' # add start and stop characters to the string
+    INPUT = 'a' # add start and stop characters to the string
     for i in INPUT:
         ser.write(i.encode('utf-8',errors="ignore"))
         time.sleep(0.01)
