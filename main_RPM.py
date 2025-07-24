@@ -23,9 +23,9 @@ canvas = FigureCanvasTkAgg(fig, master=root)  # A tk.DrawingArea.
 canvas.draw()
 canvas.get_tk_widget().pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
 
-# toolbar = NavigationToolbar2Tk(canvas, root)
-# toolbar.update()
-# canvas.get_tk_widget().pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
+#toolbar = NavigationToolbar2Tk(canvas, root)
+#toolbar.update()
+#canvas.get_tk_widget().pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
 
 
 def on_key_press(event):
@@ -45,8 +45,9 @@ def _quit():
 def on_stop_press():
     ser = serial.Serial()
     ser.baudrate = 115200
-    ser.port = 'COM5'
+    ser.port = '/dev/ttyACM0'
     ser.open()
+    time.sleep(1)
     INPUT = "r"
     for i in INPUT:
         ser.write(i.encode('utf-8',errors="ignore"))
@@ -60,10 +61,26 @@ def on_stop_press():
 def on_start_press():
     ser = serial.Serial()
     ser.baudrate = 115200
-    ser.port = 'COM5'
+    ser.port = '/dev/ttyACM0'
     ser.open()
+    time.sleep(1)
     INPUT = profile_text.get("1.0", "end")
     INPUT = 'a' # add start and stop characters to the string
+    for i in INPUT:
+        ser.write(i.encode('utf-8',errors="ignore"))
+        time.sleep(0.01)
+    time.sleep(0.1)
+    x = ser.read_all()
+    print(x)
+    ser.close()
+    
+def on_debug_press():
+    ser = serial.Serial()
+    ser.baudrate = 115200
+    ser.port = '/dev/ttyACM0'
+    ser.open()
+    time.sleep(1)
+    INPUT = 'd'
     for i in INPUT:
         ser.write(i.encode('utf-8',errors="ignore"))
         time.sleep(0.01)
@@ -104,10 +121,10 @@ button_start.pack(side=tkinter.TOP)
 button_stop = tkinter.Button(master=root, text="Stop", command=on_stop_press, image=i, compound='c', width=100, height=100)
 button_stop.pack(side=tkinter.TOP)
 
-button_manual = tkinter.Button(master=root, text="Manual", command=open_popup, image=i, compound='c', width=100, height=100)
+button_manual = tkinter.Button(master=root, text="Debug", command=on_debug_press, image=i, compound='c', width=100, height=100)
 button_manual.pack(side=tkinter.TOP)
 
-button_status = tkinter.Button(master=root, text="Status", command=_quit, image=i, compound='c', width=100, height=100)
+button_status = tkinter.Button(master=root, text="Exit", command=_quit, image=i, compound='c', width=100, height=100)
 button_status.pack(side=tkinter.TOP)
 
 # scale the window
